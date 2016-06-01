@@ -1,0 +1,16 @@
+{
+    "name": "vladimir-yuldashev/monolog-telegram",
+    "description": "Monolog handler for Telegram",
+    "type": "library",
+    "require": {
+        "monolog/monolog": "1.*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "misterio",
+            "email": "misterio92@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
