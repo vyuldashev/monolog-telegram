@@ -1,16 +1,23 @@
 {
-    "name": "vladimir-yuldashev/monolog-telegram",
-    "description": "Monolog handler for Telegram",
-    "type": "library",
-    "require": {
-        "monolog/monolog": "1.*"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "misterio",
-            "email": "misterio92@gmail.com"
-        }
-    ],
-    "minimum-stability": "stable"
+  "name": "vladimir-yuldashev/monolog-telegram",
+  "description": "Monolog handler for Telegram",
+  "type": "library",
+  "require": {
+    "php": ">=5.5",
+    "monolog/monolog": "1.*",
+    "irazasyed/telegram-bot-sdk": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "VladimirYuldashev\\": "src/"
+    }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "misterio",
+      "email": "misterio92@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable"
 }
