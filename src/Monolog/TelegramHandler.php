@@ -2,8 +2,9 @@
 
 namespace VladimirYuldashev\Monolog;
 
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractHandler;
-use Telegram\Bot\Api;
+use Monolog\Logger;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Exception;
 
@@ -11,6 +12,17 @@ class TelegramHandler extends AbstractHandler
 {
     private $token;
     private $chatId;
+
+    private $emojis = [
+        Logger::DEBUG => '🚧',
+        Logger::INFO => '‍🗨',
+        Logger::NOTICE => '🕵',
+        Logger::WARNING => '⚡️',
+        Logger::ERROR => '🚨',
+        Logger::CRITICAL => '🤒',
+        Logger::ALERT => '👀',
+        Logger::EMERGENCY => '🤕',
+    ];
 
     public function __construct(int $level, string $token, int $chatId)
     {
@@ -37,10 +49,15 @@ class TelegramHandler extends AbstractHandler
      */
     public function handle(array $record)
     {
-        $text = json_encode($record, JSON_UNESCAPED_UNICODE);
+        $format = new LineFormatter;
+
+        $context = $record['context'] ? $format->stringify($record['context']) : '';
+        $date = $record['datetime']->format('Y-m-d h:m');
+
+        $message = $date.PHP_EOL.$this->emojis[$record['level']].$record['message'].$context;
 
         try {
-            $this->telegram()->sendMessage($this->chatId, $text);
+            $this->telegram()->sendMessage($this->chatId, $message);
 
             return true;
         } catch (Exception $exception) {
