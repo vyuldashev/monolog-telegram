@@ -1,21 +1,21 @@
 <?php
+
 namespace VladimirYuldashev\Monolog;
 
 use Monolog\Handler\AbstractHandler;
 use Telegram\Bot\Api;
+use TelegramBot\Api\BotApi;
+use TelegramBot\Api\Exception;
 
 class TelegramHandler extends AbstractHandler
 {
-
     private $token;
     private $chatId;
-    private $async;
 
-    public function __construct($level, $token, $chatId, $async = false)
+    public function __construct(int $level, string $token, int $chatId)
     {
         $this->token = $token;
         $this->chatId = $chatId;
-        $this->async = $async;
 
         parent::__construct($level, false);
     }
@@ -31,6 +31,7 @@ class TelegramHandler extends AbstractHandler
      * calling further handlers in the stack with a given log record.
      *
      * @param  array $record The record to handle
+     *
      * @return Boolean true means that this handler handled the record, and that bubbling is not permitted.
      *                        false means the record was either not processed or that this handler allows bubbling.
      */
@@ -38,15 +39,17 @@ class TelegramHandler extends AbstractHandler
     {
         $text = json_encode($record, JSON_UNESCAPED_UNICODE);
 
-        $this->telegram()->sendMessage([
-            'chat_id' => $this->chatId,
-            'text' => $text,
-        ]);
+        try {
+            $this->telegram()->sendMessage($this->chatId, $text);
+
+            return true;
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
-    private function telegram()
+    private function telegram(): BotApi
     {
-        return new Api($this->token, $this->async);
+        return new BotApi($this->token);
     }
-
 }

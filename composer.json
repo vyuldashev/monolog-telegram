@@ -3,9 +3,9 @@
   "description": "Monolog handler for Telegram",
   "type": "library",
   "require": {
-    "php": ">=5.5",
+    "php": "^7.0",
     "monolog/monolog": "1.*",
-    "irazasyed/telegram-bot-sdk": "^2.0"
+    "telegram-bot/api": "^2.2"
   },
   "autoload": {
     "psr-4": {
@@ -15,9 +15,14 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "misterio",
+      "name": "Vladimir Yuldashev",
       "email": "misterio92@gmail.com"
     }
   ],
-  "minimum-stability": "stable"
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
