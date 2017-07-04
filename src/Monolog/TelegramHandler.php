@@ -52,7 +52,7 @@ class TelegramHandler extends AbstractHandler
         $format = new LineFormatter;
 
         $context = $record['context'] ? $format->stringify($record['context']) : '';
-        $date = $record['datetime']->format('Y-m-d h:m');
+        $date = $record['datetime']->format('Y-m-d H:i:s');
 
         $message = gethostname().' '.$date.PHP_EOL.$this->emojis[$record['level']].$record['message'].$context;
 
