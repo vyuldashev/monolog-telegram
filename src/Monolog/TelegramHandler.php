@@ -4,11 +4,12 @@ namespace VladimirYuldashev\Monolog;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractHandler;
+use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Exception;
 
-class TelegramHandler extends AbstractHandler
+class TelegramHandler extends AbstractProcessingHandler
 {
     private $token;
     private $chatId;
@@ -47,12 +48,14 @@ class TelegramHandler extends AbstractHandler
      * @return Boolean true means that this handler handled the record, and that bubbling is not permitted.
      *                        false means the record was either not processed or that this handler allows bubbling.
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         $format = new LineFormatter;
 
         $context = $record['context'] ? $format->stringify($record['context']) : '';
         $date = $record['datetime']->format('Y-m-d H:i:s');
+
+        $record = $this->processRecord($record);
 
         $message = gethostname() . ' ' . $date . PHP_EOL . $this->emojis[$record['level']] . $record['message'] . $context;
 
