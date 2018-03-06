@@ -36,7 +36,7 @@ class TelegramHandler extends AbstractProcessingHandler
             $message = '[' . gethostname() . '] ' . $record['formatted'];
             $message = substr($message, 0, 4096);
 
-            $this->client->postAsync('/bot' . $this->token . '/sendMessage', [
+            $this->client->post('/bot' . $this->token . '/sendMessage', [
                 'form_params' => [
                     'chat_id' => $this->chatId,
                     'text' => $message,
