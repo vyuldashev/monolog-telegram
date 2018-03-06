@@ -6,6 +6,7 @@ namespace VladimirYuldashev\Monolog;
 
 use Exception;
 use GrahamCampbell\GuzzleFactory\GuzzleFactory;
+use GuzzleHttp\Client;
 use Monolog\Handler\AbstractProcessingHandler;
 
 class TelegramHandler extends AbstractProcessingHandler
@@ -14,9 +15,9 @@ class TelegramHandler extends AbstractProcessingHandler
     private $token;
     private $chatId;
 
-    public function __construct(int $level, string $token, int $chatId, bool $bubble = true)
+    public function __construct(int $level, string $token, int $chatId, bool $bubble = true, Client $client = null)
     {
-        $this->client = GuzzleFactory::make(['base_uri' => 'https://api.telegram.org']);
+        $this->client = $client ?? GuzzleFactory::make(['base_uri' => 'https://api.telegram.org']);
         $this->token = $token;
         $this->chatId = $chatId;
 

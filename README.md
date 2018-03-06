@@ -15,7 +15,6 @@ $ composer require vladimir-yuldashev/monolog-telegram
 use Monolog\Logger;
 use VladimirYuldashev\Monolog\TelegramHandler;
 
-
 $telegramToken = '';
 $chatId = 1;
 
