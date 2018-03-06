@@ -1,6 +1,6 @@
 {
   "name": "vladimir-yuldashev/monolog-telegram",
-  "description": "Monolog handler for Telegram",
+  "description": "Telegram handler for Monolog",
   "type": "library",
   "require": {
     "php": "^7.0",
