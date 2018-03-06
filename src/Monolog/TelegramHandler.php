@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace VladimirYuldashev\Monolog;
 
+use Exception;
+use GrahamCampbell\GuzzleFactory\GuzzleFactory;
 use Monolog\Handler\AbstractProcessingHandler;
-use TelegramBot\Api\BotApi;
-use TelegramBot\Api\Exception;
 
 class TelegramHandler extends AbstractProcessingHandler
 {
+    private $client;
     private $token;
     private $chatId;
 
-    public function __construct(int $level, string $token, int $chatId)
+    public function __construct(int $level, string $token, int $chatId, bool $bubble = true)
     {
+        $this->client = GuzzleFactory::make(['base_uri' => 'https://api.telegram.org']);
         $this->token = $token;
         $this->chatId = $chatId;
 
-        parent::__construct($level, false);
+        parent::__construct($level, $bubble);
     }
 
     /**
@@ -31,16 +33,17 @@ class TelegramHandler extends AbstractProcessingHandler
     protected function write(array $record): void
     {
         try {
-            $message = substr($record['formatted'], 0, 4096);
+            $message = '[' . gethostname() . '] ' . $record['formatted'];
+            $message = substr($message, 0, 4096);
 
-            $this->telegram()->sendMessage($this->chatId, $message);
+            $this->client->postAsync('/bot' . $this->token . '/sendMessage', [
+                'form_params' => [
+                    'chat_id' => $this->chatId,
+                    'text' => $message,
+                ],
+            ]);
         } catch (Exception $exception) {
+
         }
-    }
-
-
-    private function telegram(): BotApi
-    {
-        return new BotApi($this->token);
     }
 }

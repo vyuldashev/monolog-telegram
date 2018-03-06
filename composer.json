@@ -4,8 +4,8 @@
   "type": "library",
   "require": {
     "php": "^7.0",
-    "monolog/monolog": "1.*",
-    "telegram-bot/api": "^2.2"
+    "graham-campbell/guzzle-factory": "^3.0",
+    "monolog/monolog": "1.*"
   },
   "autoload": {
     "psr-4": {
