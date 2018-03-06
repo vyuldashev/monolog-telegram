@@ -54,15 +54,14 @@ class TelegramHandler extends AbstractHandler
         $context = $record['context'] ? $format->stringify($record['context']) : '';
         $date = $record['datetime']->format('Y-m-d H:i:s');
 
-        $message = gethostname().' '.$date.PHP_EOL.$this->emojis[$record['level']].$record['message'].$context;
+        $message = gethostname() . ' ' . $date . PHP_EOL . $this->emojis[$record['level']] . $record['message'] . $context;
 
         try {
             $this->telegram()->sendMessage($this->chatId, $message);
-
-            return true;
         } catch (Exception $exception) {
-            return false;
         }
+
+        return false;
     }
 
     private function telegram(): BotApi
