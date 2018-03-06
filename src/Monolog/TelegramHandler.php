@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace VladimirYuldashev\Monolog;
 
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\AbstractHandler;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Exception;
 
@@ -13,17 +12,6 @@ class TelegramHandler extends AbstractProcessingHandler
 {
     private $token;
     private $chatId;
-
-    private $emojis = [
-        Logger::DEBUG => '🚧',
-        Logger::INFO => '‍🗨',
-        Logger::NOTICE => '🕵',
-        Logger::WARNING => '⚡️',
-        Logger::ERROR => '🚨',
-        Logger::CRITICAL => '🤒',
-        Logger::ALERT => '👀',
-        Logger::EMERGENCY => '🤕',
-    ];
 
     public function __construct(int $level, string $token, int $chatId)
     {
@@ -34,38 +22,22 @@ class TelegramHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Handles a record.
+     * Writes the record down to the log of the implementing handler
      *
-     * All records may be passed to this method, and the handler should discard
-     * those that it does not want to handle.
+     * @param  array $record
      *
-     * The return value of this function controls the bubbling process of the handler stack.
-     * Unless the bubbling is interrupted (by returning true), the Logger class will keep on
-     * calling further handlers in the stack with a given log record.
-     *
-     * @param  array $record The record to handle
-     *
-     * @return Boolean true means that this handler handled the record, and that bubbling is not permitted.
-     *                        false means the record was either not processed or that this handler allows bubbling.
+     * @return void
      */
-    public function handle(array $record): bool
+    protected function write(array $record): void
     {
-        $format = new LineFormatter;
-
-        $context = $record['context'] ? $format->stringify($record['context']) : '';
-        $date = $record['datetime']->format('Y-m-d H:i:s');
-
-        $record = $this->processRecord($record);
-
-        $message = gethostname() . ' ' . $date . PHP_EOL . $this->emojis[$record['level']] . $record['message'] . $context;
-
         try {
+            $message = substr($record['formatted'], 0, 4096);
+
             $this->telegram()->sendMessage($this->chatId, $message);
         } catch (Exception $exception) {
         }
-
-        return false;
     }
+
 
     private function telegram(): BotApi
     {
